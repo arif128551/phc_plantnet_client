@@ -1,12 +1,56 @@
-import AddPlantForm from '../../../components/Form/AddPlantForm'
+import axios from "axios";
+import AddPlantForm from "../../../components/Form/AddPlantForm";
+import { imageUpload } from "../../../api/utils";
+import toast from "react-hot-toast";
+import useAuth from "../../../hooks/useAuth";
 
 const AddPlant = () => {
-  return (
-    <div>
-      {/* Form */}
-      <AddPlantForm />
-    </div>
-  )
-}
+	const { user } = useAuth();
+	const handleAddPlant = async (e) => {
+		e.preventDefault();
+		const form = e.target;
+		const name = form?.name?.value;
+		const category = form?.category?.value;
+		const description = form?.description?.value;
+		const price = form?.price?.value;
+		const quantity = form?.quantity?.value;
+		const image = form?.image?.files[0];
 
-export default AddPlant
+		if (!image) {
+			toast.error("Upload image first");
+			return;
+		}
+
+		const imageFormData = new FormData();
+		imageFormData.append("image", image);
+		const toastId = toast.loading("Uploading image...");
+		const imageUrl = await imageUpload(imageFormData);
+		const plantData = {
+			name,
+			category,
+			description,
+			price,
+			quantity,
+			image: imageUrl,
+			seller: { name: user?.displayName, email: user?.email },
+			created_at: new Date().toISOString(),
+		};
+		// 🌿 toast update
+		toast.loading("Adding plant...", { id: toastId });
+
+		const res = await axios.post(`${import.meta.env.VITE_API_URL}/plants`, plantData);
+
+		if (res.data.insertedId) {
+			toast.success("✅ Plant added successfully!", { id: toastId });
+			form.reset();
+		}
+	};
+	return (
+		<div>
+			{/* Form */}
+			<AddPlantForm handleAddPlant={handleAddPlant} />
+		</div>
+	);
+};
+
+export default AddPlant;
