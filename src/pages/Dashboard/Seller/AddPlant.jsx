@@ -3,9 +3,11 @@ import AddPlantForm from "../../../components/Form/AddPlantForm";
 import { imageUpload } from "../../../api/utils";
 import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
+import { useState } from "react";
 
 const AddPlant = () => {
 	const { user } = useAuth();
+	const [previewImage, setPreviewImage] = useState(null);
 	const handleAddPlant = async (e) => {
 		e.preventDefault();
 		const form = e.target;
@@ -32,7 +34,7 @@ const AddPlant = () => {
 			price,
 			quantity,
 			image: imageUrl,
-			seller: { name: user?.displayName, email: user?.email },
+			seller: { name: user?.displayName, email: user?.email, photo: user?.photoURL },
 			created_at: new Date().toISOString(),
 		};
 		// 🌿 toast update
@@ -43,12 +45,13 @@ const AddPlant = () => {
 		if (res.data.insertedId) {
 			toast.success("✅ Plant added successfully!", { id: toastId });
 			form.reset();
+			setPreviewImage(null);
 		}
 	};
 	return (
 		<div>
 			{/* Form */}
-			<AddPlantForm handleAddPlant={handleAddPlant} />
+			<AddPlantForm handleAddPlant={handleAddPlant} previewImage={previewImage} setPreviewImage={setPreviewImage} />
 		</div>
 	);
 };

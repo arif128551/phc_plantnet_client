@@ -34,6 +34,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/plant/:id",
 				element: <PlantDetails />,
+				loader: async ({ params }) => {
+					const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants/${params.id}`);
+					return res.data;
+				},
 			},
 		],
 	},

@@ -1,4 +1,11 @@
-const AddPlantForm = ({ handleAddPlant }) => {
+const AddPlantForm = ({ handleAddPlant, previewImage, setPreviewImage }) => {
+	const handleImageChange = (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			const localUrl = URL.createObjectURL(file);
+			setPreviewImage(localUrl);
+		}
+	};
 	return (
 		<div className="w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50">
 			<form onSubmit={handleAddPlant}>
@@ -87,6 +94,9 @@ const AddPlantForm = ({ handleAddPlant }) => {
 								<div className="flex flex-col w-max mx-auto text-center">
 									<label>
 										<input
+											onChange={(e) => {
+												handleImageChange(e);
+											}}
 											className="text-sm cursor-pointer w-36 hidden"
 											type="file"
 											name="image"
@@ -98,6 +108,11 @@ const AddPlantForm = ({ handleAddPlant }) => {
 											Upload
 										</div>
 									</label>
+									{previewImage && (
+										<div className="mt-4">
+											<img src={previewImage} alt="Preview" className="w-full h-64 object-cover rounded-lg shadow" />
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
