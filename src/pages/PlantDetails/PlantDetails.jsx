@@ -4,8 +4,10 @@ import Button from "../../components/Shared/Button/Button";
 import PurchaseModal from "../../components/Modal/PurchaseModal";
 import { useState } from "react";
 import { useLoaderData } from "react-router";
+import useAuth from "../../hooks/useAuth";
 
 const PlantDetails = () => {
+	const { user } = useAuth();
 	const plantDetails = useLoaderData();
 
 	const { name, category, description, price, quantity, image, seller = {}, created_at } = plantDetails;
@@ -67,7 +69,7 @@ const PlantDetails = () => {
 					{/* Price and Purchase */}
 					<div className="flex justify-between">
 						<p className="font-bold text-3xl text-gray-500">Price: ${price}</p>
-						<Button onClick={() => setIsOpen(true)} label="Purchase" />
+						<Button disabled={!user} onClick={() => setIsOpen(true)} label={user ? `Purchase` : "Login to Purchase"} />
 					</div>
 
 					<hr className="my-6" />
