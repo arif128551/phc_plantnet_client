@@ -22,6 +22,10 @@ const PlantDetails = () => {
 		setIsOpen(false);
 	};
 
+	// const isAuthor = plantDetails?.seller?.email === user?.email;
+	// const hasStock = plantDetails?.quantity > 0;
+	// const canPurchase = !isAuthor && hasStock;
+
 	return (
 		<Container>
 			<div className="mx-auto flex flex-col lg:flex-row justify-between w-full gap-12">
@@ -67,9 +71,21 @@ const PlantDetails = () => {
 					<hr className="my-6" />
 
 					{/* Price and Purchase */}
-					<div className="flex justify-between">
+					<div className="flex justify-between items-center">
 						<p className="font-bold text-3xl text-gray-500">Price: ${price}</p>
-						<Button disabled={!user} onClick={() => setIsOpen(true)} label={user ? `Purchase` : "Login to Purchase"} />
+						<Button
+							onClick={() => setIsOpen(true)}
+							disabled={!user || user.email === seller?.email || quantity <= 0}
+							label={
+								!user
+									? "Login to Purchase"
+									: user.email === seller?.email
+									? "You can't purchase your own item"
+									: quantity <= 0
+									? "Out of Stock"
+									: "Purchase"
+							}
+						/>
 					</div>
 
 					<hr className="my-6" />

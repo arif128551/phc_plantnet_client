@@ -1,6 +1,10 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { useState } from "react";
+import CheckoutForm from "../Form/CheckoutForm";
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 	const [orderQuantity, setOrderQuantity] = useState(1);
 	if (!isOpen) return null;
@@ -35,23 +39,21 @@ const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 		}
 	};
 
-	const handleOrder = () => {
-		console.log("Purchasing", { ...plantDetails, orderQuantity, totalPrice });
-		closeModal();
-	};
+	// const handleOrder = () => {
+	// 	console.log("Purchasing", { ...plantDetails, orderQuantity, totalPrice });
+	// 	closeModal();
+	// };
 	return (
 		<Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={closeModal}>
 			<div className="fixed inset-0 z-10 w-screen bg-black/25 backdrop-blur-sm overflow-y-auto">
 				<div className="flex min-h-full items-center justify-center p-4">
-					<DialogPanel className="w-full max-w-md bg-white p-6 shadow-xl rounded-2xl">
+					<DialogPanel className="w-full max-w-xl bg-white p-6 shadow-xl rounded-2xl">
 						<DialogTitle as="h3" className="text-lg font-semibold text-center text-gray-900 mb-4">
 							Review Info Before Purchase
 						</DialogTitle>
-
 						<div className="flex justify-center mb-4">
 							<img src={image} alt={name} className="w-32 h-32 object-cover rounded-lg shadow" />
 						</div>
-
 						<ul className="text-sm text-gray-600 space-y-2">
 							<li>
 								<span className="font-medium">Plant:</span> {name}
@@ -69,7 +71,6 @@ const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 								<span className="font-medium">Available Quantity:</span> {quantity}
 							</li>
 						</ul>
-
 						{/* Quantity Input */}
 						<div className="mt-4">
 							<label className="block text-sm font-medium text-gray-700 mb-1">Enter Quantity to Buy:</label>
@@ -89,12 +90,19 @@ const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 								<p className="text-sm text-red-500 mt-1">You can't buy more than available stock.</p>
 							)}
 						</div>
-
 						{/* Total Price */}
-						<div className="mt-2 font-medium text-gray-800">
+						<div className="mt-2 font-medium text-gray-800 mb-2">
 							Total Price: <span className="text-green-600">${totalPrice.toFixed(2)}</span>
 						</div>
-
+						{/* payments */}
+						<Elements stripe={stripePromise}>
+							<CheckoutForm
+								totalPrice={totalPrice}
+								orderQuantity={orderQuantity}
+								plantDetails={plantDetails}
+								closeModal={closeModal}
+							/>
+						</Elements>
 						{/* Action Buttons */}
 						<div className="mt-6 flex justify-end gap-3">
 							<button
@@ -103,13 +111,13 @@ const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 							>
 								Cancel
 							</button>
-							<button
+							{/* <button
 								onClick={handleOrder}
 								disabled={orderQuantity > quantity}
 								className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400"
 							>
 								Order Now
-							</button>
+							</button> */}
 						</div>
 					</DialogPanel>
 				</div>
