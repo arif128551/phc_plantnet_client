@@ -4,10 +4,13 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { imageUpload } from "../../api/utils";
+import useSocialLogin from "../../hooks/useSocialLogin";
+import axios from "axios";
 
 const SignUp = () => {
-	const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth();
+	const { createUser, updateUserProfile, loading } = useAuth();
 	const navigate = useNavigate();
+	const { handleGoogleSignIn } = useSocialLogin();
 	// form submit handler
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -20,35 +23,45 @@ const SignUp = () => {
 		const imageFormData = new FormData();
 		imageFormData.append("image", image);
 		const imageUrl = await imageUpload(imageFormData);
+
 		try {
-			//2. User Registration
+			// 1. Register user
 			const result = await createUser(email, password);
 
-			//3. Save username & profile photo
+			// 2. Update displayName and photoURL
 			await updateUserProfile(name, imageUrl);
-			console.log(result);
+
+			// 3. Save to database
+			const userInfo = {
+				name,
+				email,
+				image: imageUrl,
+				role: "customer", // default role
+			};
+
+			await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);
 
 			navigate("/");
 			toast.success("Signup Successful");
 		} catch (err) {
-			console.log(err);
-			toast.error(err?.message);
+			console.error(err);
+			toast.error(err?.message || "Signup failed");
 		}
 	};
 
 	// Handle Google Signin
-	const handleGoogleSignIn = async () => {
-		try {
-			//User Registration using google
-			await signInWithGoogle();
+	// const handleGoogleSignIn = async () => {
+	// 	try {
+	// 		//User Registration using google
+	// 		await signInWithGoogle();
 
-			navigate("/");
-			toast.success("Signup Successful");
-		} catch (err) {
-			console.log(err);
-			toast.error(err?.message);
-		}
-	};
+	// 		navigate("/");
+	// 		toast.success("Signup Successful");
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 		toast.error(err?.message);
+	// 	}
+	// };
 	return (
 		<div className="flex justify-center items-center min-h-screen bg-white">
 			<div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
