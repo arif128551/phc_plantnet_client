@@ -2,12 +2,9 @@ import useAuth from "../../../hooks/useAuth";
 
 import coverImg from "../../../assets/images/cover.jpg";
 import useUserRole from "../../../hooks/useUserRole";
-import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 const Profile = () => {
 	const { user } = useAuth();
-
-	const { role, roleLoading } = useUserRole();
-	if (roleLoading) return <LoadingSpinner />;
+	const { role } = useUserRole();
 	return (
 		<div className="flex justify-center items-center h-screen">
 			<div className="bg-white shadow-lg rounded-2xl md:w-4/5 lg:w-3/5">
@@ -21,7 +18,7 @@ const Profile = () => {
 						/>
 					</a>
 
-					<p className="p-2 px-4 text-xs text-white bg-lime-500 rounded-full">{role[0]}</p>
+					<p className="p-2 px-4 text-xs text-white bg-lime-500 rounded-full">{role}</p>
 					<p className="mt-2 text-xl font-medium text-gray-800 ">User Id: {user.uid}</p>
 					<div className="w-full p-2 mt-4 rounded-lg">
 						<div className="flex flex-wrap items-center justify-between text-sm text-gray-600 ">

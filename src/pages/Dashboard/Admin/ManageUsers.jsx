@@ -1,6 +1,38 @@
+import { useQuery } from "@tanstack/react-query";
 import UserDataRow from "../../../components/Dashboard/TableRows/UserDataRow";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
+import UpdateUserRole from "../../../components/Modal/UpdateUserRole";
+import { useState } from "react";
 
 const ManageUsers = () => {
+	const axiosSecure = useAxiosSecure();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedUser, setSelectedUser] = useState(null);
+
+	const {
+		data: users = [],
+		isPending,
+		refetch,
+	} = useQuery({
+		queryKey: ["all-users"],
+		queryFn: async () => {
+			const res = await axiosSecure.get("/users");
+			return res.data;
+		},
+	});
+
+	const handleOpenModal = (user) => {
+		setSelectedUser(user);
+		setIsModalOpen(true);
+	};
+
+	const handleCloseModal = () => {
+		setSelectedUser(null);
+		setIsModalOpen(false);
+	};
+
+	if (isPending) return <LoadingSpinner />;
 	return (
 		<>
 			<div className="container mx-auto px-4 sm:px-8">
@@ -38,13 +70,18 @@ const ManageUsers = () => {
 									</tr>
 								</thead>
 								<tbody>
-									<UserDataRow />
+									{users.map((user) => (
+										<UserDataRow key={user._id} user={user} onUpdateClick={handleOpenModal} />
+									))}
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
 			</div>
+			{isModalOpen && selectedUser && (
+				<UpdateUserRole user={selectedUser} isOpen={isModalOpen} onClose={handleCloseModal} refetch={refetch} />
+			)}
 		</>
 	);
 };

@@ -56,23 +56,18 @@ const AuthProvider = ({ children }) => {
 
 			if (currentUser?.email) {
 				setUser((prevUser) => {
-					if (prevUser?.uid !== currentUser?.uid) {
-						return currentUser;
-					}
-					return prevUser; // no need to trigger setState
+					if (prevUser?.uid !== currentUser?.uid) return currentUser;
+					return prevUser;
 				});
 
-				// Get JWT token
 				await axios.post(
 					`${import.meta.env.VITE_API_URL}/jwt`,
-					{ email: currentUser?.email },
+					{ email: currentUser.email },
 					{ withCredentials: true }
 				);
 			} else {
 				setUser(null);
-				await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
-					withCredentials: true,
-				});
+				await axios.get(`${import.meta.env.VITE_API_URL}/logout`, { withCredentials: true });
 			}
 
 			setLoading(false);

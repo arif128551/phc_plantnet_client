@@ -17,6 +17,8 @@ import MyOrders from "../pages/Dashboard/Customer/MyOrders";
 import axios from "axios";
 import LoadingSpinner from "../components/Shared/LoadingSpinner";
 import AdminRoute from "./AdminRoute";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import SellerRoute from "./SellerRoute";
 
 export const router = createBrowserRouter([
 	{
@@ -56,6 +58,14 @@ export const router = createBrowserRouter([
 				index: true,
 				element: (
 					<PrivateRoute>
+						<Dashboard />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: "statistics",
+				element: (
+					<PrivateRoute>
 						<AdminRoute>
 							<Statistics />
 						</AdminRoute>
@@ -66,7 +76,9 @@ export const router = createBrowserRouter([
 				path: "add-plant",
 				element: (
 					<PrivateRoute>
-						<AddPlant />
+						<SellerRoute>
+							<AddPlant />
+						</SellerRoute>
 					</PrivateRoute>
 				),
 			},
@@ -74,7 +86,9 @@ export const router = createBrowserRouter([
 				path: "my-inventory",
 				element: (
 					<PrivateRoute>
-						<MyInventory />
+						<SellerRoute>
+							<MyInventory />
+						</SellerRoute>
 					</PrivateRoute>
 				),
 			},
@@ -108,7 +122,9 @@ export const router = createBrowserRouter([
 				path: "manage-orders",
 				element: (
 					<PrivateRoute>
-						<ManageOrders />
+						<SellerRoute>
+							<ManageOrders />
+						</SellerRoute>
 					</PrivateRoute>
 				),
 			},

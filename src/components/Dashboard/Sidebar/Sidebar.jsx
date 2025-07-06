@@ -17,7 +17,7 @@ const Sidebar = () => {
 	const { logOut } = useAuth();
 	const [isActive, setIsActive] = useState(false);
 
-	const { isAdmin, isCustomer, roleLoading } = useUserRole();
+	const { isSeller, isAdmin, isCustomer, roleLoading } = useUserRole();
 	if (roleLoading) return <LoadingSpinner />;
 
 	// Sidebar Responsive Handler
@@ -73,7 +73,7 @@ const Sidebar = () => {
 						<nav>
 							{/*  Menu Items */}
 							{isCustomer && <CustomerMenu />}
-							{/* {isSeller && <SellerMenu />} */}
+							{isSeller && <SellerMenu />}
 							{isAdmin && <AdminMenu />}
 						</nav>
 					</div>
