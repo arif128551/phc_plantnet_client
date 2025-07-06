@@ -5,7 +5,7 @@ import { useState } from "react";
 import CheckoutForm from "../Form/CheckoutForm";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
+const PurchaseModal = ({ closeModal, isOpen, plantDetails, refetch }) => {
 	const [orderQuantity, setOrderQuantity] = useState(1);
 	if (!isOpen) return null;
 	const {
@@ -101,6 +101,7 @@ const PurchaseModal = ({ closeModal, isOpen, plantDetails }) => {
 								orderQuantity={orderQuantity}
 								plantDetails={plantDetails}
 								closeModal={closeModal}
+								refetch={refetch}
 							/>
 						</Elements>
 						{/* Action Buttons */}

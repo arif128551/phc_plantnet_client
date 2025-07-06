@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth"; // যদি custom useAuth থাকে
 
-const CheckoutForm = ({ orderQuantity, plantDetails, closeModal }) => {
+const CheckoutForm = ({ orderQuantity, plantDetails, closeModal, refetch }) => {
 	const stripe = useStripe();
 	const elements = useElements();
 	const { user } = useAuth(); // ✅ get logged-in user
@@ -92,6 +92,7 @@ const CheckoutForm = ({ orderQuantity, plantDetails, closeModal }) => {
 				if (orderRes.data.insertedId) {
 					toast.success("Order placed successfully!");
 					closeModal();
+					refetch();
 				}
 			} catch (err) {
 				console.error("Order Save Error:", err);

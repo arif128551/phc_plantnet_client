@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Route } from "react-router";
 import Home from "../pages/Home/Home";
 import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login/Login";
@@ -16,6 +16,7 @@ import ManageOrders from "../pages/Dashboard/Seller/ManageOrders";
 import MyOrders from "../pages/Dashboard/Customer/MyOrders";
 import axios from "axios";
 import LoadingSpinner from "../components/Shared/LoadingSpinner";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
 	{
@@ -34,10 +35,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/plant/:id",
 				element: <PlantDetails />,
-				loader: async ({ params }) => {
-					const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants/${params.id}`);
-					return res.data;
-				},
+				// loader: async ({ params }) => {
+				// 	const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants/${params.id}`);
+				// 	return res.data;
+				// },
 			},
 		],
 	},
@@ -55,7 +56,9 @@ export const router = createBrowserRouter([
 				index: true,
 				element: (
 					<PrivateRoute>
-						<Statistics />
+						<AdminRoute>
+							<Statistics />
+						</AdminRoute>
 					</PrivateRoute>
 				),
 			},
@@ -79,7 +82,9 @@ export const router = createBrowserRouter([
 				path: "manage-users",
 				element: (
 					<PrivateRoute>
-						<ManageUsers />
+						<AdminRoute>
+							<ManageUsers />
+						</AdminRoute>
 					</PrivateRoute>
 				),
 			},
@@ -101,7 +106,11 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: "manage-orders",
-				element: <ManageOrders />,
+				element: (
+					<PrivateRoute>
+						<ManageOrders />
+					</PrivateRoute>
+				),
 			},
 		],
 	},

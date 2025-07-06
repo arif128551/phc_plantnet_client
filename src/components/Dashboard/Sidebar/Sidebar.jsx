@@ -11,9 +11,14 @@ import { Link } from "react-router";
 import SellerMenu from "./Menu/SellerMenu";
 import CustomerMenu from "./Menu/CustomerMenu";
 import logo from "../../../assets/images/logo-flat.png";
+import useUserRole from "../../../hooks/useUserRole";
+import LoadingSpinner from "../../Shared/LoadingSpinner";
 const Sidebar = () => {
 	const { logOut } = useAuth();
 	const [isActive, setIsActive] = useState(false);
+
+	const { isAdmin, isCustomer, roleLoading } = useUserRole();
+	if (roleLoading) return <LoadingSpinner />;
 
 	// Sidebar Responsive Handler
 	const handleToggle = () => {
@@ -67,10 +72,9 @@ const Sidebar = () => {
 					<div className="flex flex-col justify-between flex-1 mt-6">
 						<nav>
 							{/*  Menu Items */}
-							<CustomerMenu />
-							<SellerMenu />
-
-							<AdminMenu />
+							{isCustomer && <CustomerMenu />}
+							{/* {isSeller && <SellerMenu />} */}
+							{isAdmin && <AdminMenu />}
 						</nav>
 					</div>
 				</div>

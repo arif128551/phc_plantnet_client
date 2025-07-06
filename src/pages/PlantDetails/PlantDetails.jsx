@@ -3,24 +3,42 @@ import Heading from "../../components/Shared/Heading";
 import Button from "../../components/Shared/Button/Button";
 import PurchaseModal from "../../components/Modal/PurchaseModal";
 import { useState } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 
 const PlantDetails = () => {
 	const { user } = useAuth();
-	const plantDetails = useLoaderData();
+	// const plantDetails = useLoaderData();
 
-	const { name, category, description, price, quantity, image, seller = {}, created_at } = plantDetails;
+	const { id } = useParams();
 
-	const sellerName = seller.name || "Unknown Seller";
-	const sellerEmail = seller.email || "No Email";
-	const sellerPhoto = seller.photo || "https://i.ibb.co/KpDZqB1T/Chat-GPT-Image-Jun-25-2025-08-23-16-AM.png";
+	const {
+		data: plantDetails,
+		isLoading,
+		refetch,
+	} = useQuery({
+		queryKey: ["plantDetails", id],
+		queryFn: async () => {
+			const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants/${id}`);
+			return res.data;
+		},
+	});
 
 	let [isOpen, setIsOpen] = useState(false);
 
 	const closeModal = () => {
 		setIsOpen(false);
 	};
+
+	if (isLoading || !plantDetails) return <LoadingSpinner />;
+	const { name, category, description, price, quantity, image, seller = {}, created_at } = plantDetails;
+
+	const sellerName = seller.name || "Unknown Seller";
+	const sellerEmail = seller.email || "No Email";
+	const sellerPhoto = seller.photo || "https://i.ibb.co/KpDZqB1T/Chat-GPT-Image-Jun-25-2025-08-23-16-AM.png";
 
 	// const isAuthor = plantDetails?.seller?.email === user?.email;
 	// const hasStock = plantDetails?.quantity > 0;
@@ -90,7 +108,7 @@ const PlantDetails = () => {
 
 					<hr className="my-6" />
 
-					<PurchaseModal closeModal={closeModal} isOpen={isOpen} plantDetails={plantDetails} />
+					<PurchaseModal closeModal={closeModal} isOpen={isOpen} plantDetails={plantDetails} refetch={refetch} />
 				</div>
 			</div>
 		</Container>

@@ -36,7 +36,9 @@ const SignUp = () => {
 				name,
 				email,
 				image: imageUrl,
-				role: "customer", // default role
+				role: ["customer"], // default role
+				created_at: new Date().toISOString(),
+				last_login_time: new Date().toISOString(),
 			};
 
 			await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);

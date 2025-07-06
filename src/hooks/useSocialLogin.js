@@ -17,7 +17,9 @@ const useSocialLogin = () => {
 				name: user.displayName,
 				email: user.email,
 				image: user.photoURL,
-				role: "customer",
+				role: ["customer"],
+				created_at: new Date().toISOString(),
+				last_login_time: new Date().toISOString(),
 			};
 
 			// 2. Send user info to server (create or update)
