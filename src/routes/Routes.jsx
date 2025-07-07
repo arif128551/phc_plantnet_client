@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
 					const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants`);
 					return res.data;
 				},
+				hydrateFallbackElement: <LoadingSpinner />,
 			},
 			{
 				path: "/plant/:id",
