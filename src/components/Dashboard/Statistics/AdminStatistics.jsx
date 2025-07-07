@@ -1,5 +1,6 @@
 import { FaUserAlt, FaDollarSign } from "react-icons/fa";
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from "react-icons/bs";
+import OrderChart from "../Chart/OrderChart";
 
 const AdminStatistics = ({ adminStats }) => {
 	return (
@@ -19,7 +20,7 @@ const AdminStatistics = ({ adminStats }) => {
 								Total Revenue
 							</p>
 							<h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-								$120
+								${adminStats.totalSalesAmount}
 							</h4>
 						</div>
 					</div>
@@ -77,6 +78,7 @@ const AdminStatistics = ({ adminStats }) => {
 					{/*Sales Bar Chart */}
 					<div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
 						{/* Chart goes here.. */}
+						<OrderChart adminStats={adminStats} />
 					</div>
 					{/* Calender */}
 					<div className=" relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden">
